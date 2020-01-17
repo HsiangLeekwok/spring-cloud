@@ -45,10 +45,15 @@ public class LessonService {
         // 3、如果 user_lesson == null && 用户余额 > lesson.money
         // TODO 登录实现后需重构
         Integer userId = 1;
-        UserDTO userDto = restTemplate.getForObject("http://localhost:8081/users/{userId}", UserDTO.class, userId);
+        UserDTO userDto = restTemplate.getForObject(
+                "http://localhost:8081/users/{userId}",
+                UserDTO.class,
+                userId
+        );
+        assert userDto != null;
         BigDecimal money = userDto.getMoney().subtract(lesson.getPrice());
         if (money.doubleValue() < 0) {
-            throw new IllegalArgumentException("no enough money to buy lesson.");
+            throw new IllegalArgumentException("Not enough money to buy lesson.");
         }
         // 购买逻辑
         // 1. 调用用户微服务的扣减金额接口

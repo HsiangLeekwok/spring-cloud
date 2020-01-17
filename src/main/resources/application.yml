@@ -13,3 +13,11 @@ spring:
       ddl-auto: none
     # 打印执行的 sql 语句，方便排查问题
     show-sql: true
+
+  application:
+    name: ms-class
+
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
