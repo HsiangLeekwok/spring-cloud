@@ -6,10 +6,16 @@ import com.leekwok.msclass.entity.LessonUser;
 import com.leekwok.msclass.repository.LessonRepository;
 import com.leekwok.msclass.repository.LessonUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <b>Author</b>: Xiang Liguo<br/>
@@ -20,6 +26,9 @@ import java.math.BigDecimal;
  */
 @Service
 public class LessonService {
+
+    @Autowired
+    private DiscoveryClient discoveryClient;
 
     @Autowired
     private LessonRepository lessonRepository;
@@ -45,8 +54,20 @@ public class LessonService {
         // 3、如果 user_lesson == null && 用户余额 > lesson.money
         // TODO 登录实现后需重构
         Integer userId = 1;
+        List<ServiceInstance> instances = this.discoveryClient.getInstances("ms-user");
+
+        List<ServiceInstance> jifang = instances.stream().filter(instance -> {
+            Map<String, String> metadata = instance.getMetadata();
+            String JF = metadata.get("JIFANG");
+            if ("NJ".equals(JF)) {
+                return true;
+            }
+            return false;
+        }).collect(Collectors.toList());
+        // TODO 需要改进，不可能总是第一个用户微服务
+        URI uri = jifang.get(0).getUri();
         UserDTO userDto = restTemplate.getForObject(
-                "http://localhost:8081/users/{userId}",
+                uri + "/users/{userId}",
                 UserDTO.class,
                 userId
         );
