@@ -57,22 +57,22 @@ public class LessonService {
         // 3、如果 user_lesson == null && 用户余额 > lesson.money
         // TODO 登录实现后需重构
         Integer userId = 1;
-        List<ServiceInstance> instances = this.discoveryClient.getInstances("ms-user");
-
-//        List<ServiceInstance> jifang = instances.stream().filter(instance -> {
-//            Map<String, String> metadata = instance.getMetadata();
-//            String JF = metadata.get("JIFANG");
-//            if ("NJ".equals(JF)) {
-//                return true;
-//            }
-//            return false;
-//        }).collect(Collectors.toList());
-        // 随机算法进行远程服务选择
-        int i = ThreadLocalRandom.current().nextInt(instances.size());
-        URI uri = instances.get(i).getUri();
-        LOGGER.info("selected address = {}", uri);
+//        List<ServiceInstance> instances = this.discoveryClient.getInstances("ms-user");
+//
+////        List<ServiceInstance> jifang = instances.stream().filter(instance -> {
+////            Map<String, String> metadata = instance.getMetadata();
+////            String JF = metadata.get("JIFANG");
+////            if ("NJ".equals(JF)) {
+////                return true;
+////            }
+////            return false;
+////        }).collect(Collectors.toList());
+//        // 随机算法进行远程服务选择
+//        int i = ThreadLocalRandom.current().nextInt(instances.size());
+//        URI uri = instances.get(i).getUri();
+//        LOGGER.info("selected address = {}", uri);
         UserDTO userDto = restTemplate.getForObject(
-                uri + "/users/{userId}",
+                "http://ms-user/users/{userId}",
                 UserDTO.class,
                 userId
         );
