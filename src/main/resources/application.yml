@@ -24,6 +24,7 @@ spring:
       discovery:
         prefer-ip-address: true
         instance-id: ${spring.application.name}-${server.port}-${spring.cloud.client.hostname}
+        tags: JIFANG=NJ
 
 management:
   endpoints:
