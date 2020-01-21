@@ -33,3 +33,7 @@ management:
   endpoint:
     health:
       show-details: always
+
+ms-user:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
