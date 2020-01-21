@@ -38,6 +38,7 @@ management:
 #ms-user:
 #  ribbon:
 #    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+#    server-list-refresh-interval=30000 # 缩短服务刷新时间间隔
 ribbon:
   eager-load:
     # 允许饥饿加载
