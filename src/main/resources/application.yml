@@ -37,3 +37,9 @@ management:
 #ms-user:
 #  ribbon:
 #    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+ribbon:
+  eager-load:
+    # 允许饥饿加载
+    enabled: true
+    # 细粒度指定某些微服务使用饥饿加载，多个用逗号隔开
+    clients: ms-user
