@@ -3,6 +3,7 @@ package com.leekwok.msclass.service;
 import com.leekwok.msclass.dto.UserDTO;
 import com.leekwok.msclass.entity.Lesson;
 import com.leekwok.msclass.entity.LessonUser;
+import com.leekwok.msclass.feign.MsUserFeignClient;
 import com.leekwok.msclass.repository.LessonRepository;
 import com.leekwok.msclass.repository.LessonUserRepository;
 import org.slf4j.Logger;
@@ -40,6 +41,9 @@ public class LessonService {
     private LessonUserRepository lessonUserRepository;
 
     @Autowired
+    private MsUserFeignClient msUserFeignClient;
+
+    @Autowired
     private RestTemplate restTemplate;
 
     /**
@@ -71,11 +75,13 @@ public class LessonService {
 //        int i = ThreadLocalRandom.current().nextInt(instances.size());
 //        URI uri = instances.get(i).getUri();
 //        LOGGER.info("selected address = {}", uri);
-        UserDTO userDto = restTemplate.getForObject(
-                "http://ms-user/users/{userId}",
-                UserDTO.class,
-                userId
-        );
+//        UserDTO userDto = restTemplate.getForObject(
+//                "http://ms-user/users/{userId}",
+//                UserDTO.class,
+//                userId
+//        );
+        // 用 Feign 重构
+        UserDTO userDto = msUserFeignClient.findUserById(userId);
         assert userDto != null;
         BigDecimal money = userDto.getMoney().subtract(lesson.getPrice());
         if (money.doubleValue() < 0) {

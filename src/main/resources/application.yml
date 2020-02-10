@@ -35,6 +35,7 @@ management:
     health:
       show-details: always
 
+# ./consul agent -dev -ui -client 0.0.0.0
 #ms-user:
 #  ribbon:
 #    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
