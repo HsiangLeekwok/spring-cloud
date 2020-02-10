@@ -49,3 +49,9 @@ ribbon:
 logging:
   level:
     com.leekwok.msclass.feign.MsUserFeignClient: debug
+
+feign:
+  client:
+    config:
+      ms-user:
+        loggerLevel: full

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * <b>Subject</b>: <br/>
  * <b>Description</b>:
  */
-@FeignClient(name = "ms-user", configuration = MsUserFeignCliengConfiguration.class)
+@FeignClient(name = "ms-user"/*, configuration = MsUserFeignCliengConfiguration.class*/)
 public interface MsUserFeignClient {
 
     @GetMapping("/users/{userId}")
