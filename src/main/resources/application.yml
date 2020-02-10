@@ -46,3 +46,6 @@ ribbon:
     enabled: true
     # 细粒度指定某些微服务使用饥饿加载，多个用逗号隔开
     clients: ms-user
+logging:
+  level:
+    com.leekwok.msclass.feign.MsUserFeignClient: debug
