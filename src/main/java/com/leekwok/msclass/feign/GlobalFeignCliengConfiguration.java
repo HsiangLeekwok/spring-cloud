@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  */
 
 //@Configuration
-public class MsUserFeignCliengConfiguration {
+public class GlobalFeignCliengConfiguration {
 
     @Bean
     public Logger.Level loggerLevel() {

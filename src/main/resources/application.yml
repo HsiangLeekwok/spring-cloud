@@ -50,8 +50,9 @@ logging:
   level:
     com.leekwok.msclass.feign.MsUserFeignClient: debug
 
-feign:
-  client:
-    config:
-      ms-user:
-        loggerLevel: full
+# 细粒度配置
+#feign:
+#  client:
+#    config:
+#      ms-user:
+#        loggerLevel: full
