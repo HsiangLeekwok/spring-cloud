@@ -1,5 +1,8 @@
 package com.leekwok.msclass;
 
+import io.github.resilience4j.ratelimiter.RateLimiter;
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
+import io.vavr.collection.Seq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -25,5 +28,13 @@ public class TestController {
     public List<ServiceInstance> testDiscovery() {
         // 到 consul 上查询指定微服务的所有实例
         return discoveryClient.getInstances("ms-user");
+    }
+
+    @Autowired
+    private RateLimiterRegistry rateLimiterRegistry;
+
+    @GetMapping("/rate-limiter-configs")
+    public Seq<RateLimiter> test() {
+        return this.rateLimiterRegistry.getAllRateLimiters();
     }
 }

@@ -37,11 +37,11 @@ public class LessonController {
      */
     @GetMapping("/buy/{id}")
     // 限流放到方法上
-//    @RateLimiter(name = "buyById", fallbackMethod = "buyByIdFallback")
+    @RateLimiter(name = "buyById", fallbackMethod = "buyByIdFallback")
 //    @CircuitBreaker(name = "buyById", fallbackMethod = "buyByIdFallback")
     // bulkhead 有两种实现方式：Semaphore 和 ThreadPool，Semaphore 性能更高一些，ThreadPool会导致很多的线程池
 //    @Bulkhead(name = "buyById", fallbackMethod = "buyByIdFallback"/*,type = Bulkhead.Type.THREADPOOL*/)
-    @Retry(name = "buyById", fallbackMethod = "buyByIdFallback")
+//    @Retry(name = "buyById", fallbackMethod = "buyByIdFallback")
     public Lesson buyById(@PathVariable Integer id) throws InterruptedException {
 //        Thread.sleep(1000);
         // 1、根据 id 查询指定的 lesson
