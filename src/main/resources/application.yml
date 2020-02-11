@@ -74,3 +74,14 @@ resilience4j:
         limitRefreshPeriod: 1s
         # 线程等待许可的时间，也即第二个线程不等待，直接抛异常
         timeoutDuration: 0
+
+  # 舱壁模式
+  bulkhead:
+    instances:
+      buyById:
+        # 最大并发请求数
+        maxConcurrentCalls: 1
+        # 舱壁饱和时的最大等待时间，默认 0ms
+        maxWaitDuration: 10ms
+        # 事件缓冲区大小
+        eventConsumerBufferSize: 1
