@@ -5,6 +5,7 @@ import com.leekwok.msclass.service.LessonService;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,8 @@ public class LessonController {
 //    @RateLimiter(name = "buyById", fallbackMethod = "buyByIdFallback")
 //    @CircuitBreaker(name = "buyById", fallbackMethod = "buyByIdFallback")
     // bulkhead 有两种实现方式：Semaphore 和 ThreadPool，Semaphore 性能更高一些，ThreadPool会导致很多的线程池
-    @Bulkhead(name = "buyById", fallbackMethod = "buyByIdFallback"/*,type = Bulkhead.Type.THREADPOOL*/)
+//    @Bulkhead(name = "buyById", fallbackMethod = "buyByIdFallback"/*,type = Bulkhead.Type.THREADPOOL*/)
+    @Retry(name = "buyById", fallbackMethod = "buyByIdFallback")
     public Lesson buyById(@PathVariable Integer id) throws InterruptedException {
 //        Thread.sleep(1000);
         // 1、根据 id 查询指定的 lesson
