@@ -1,6 +1,7 @@
 package com.leekwok.msclass.feign;
 
 import com.leekwok.msclass.dto.UserDTO;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "ms-user"/*, configuration = MsUserFeignCliengConfiguration.class*/)
 public interface MsUserFeignClient {
 
+    @RateLimiter(name = "findUserById", fallbackMethod = "fallbackX")
     @GetMapping("/users/{userId}")
     UserDTO findUserById(@PathVariable("userId") Integer userId);
+
+    default UserDTO findUserById(Integer userId, Throwable throwable) {
+        return new UserDTO();
+    }
 }
