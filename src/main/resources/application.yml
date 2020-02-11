@@ -63,3 +63,14 @@ feign:
     max-connections: 200
     # feign 单个路径的最大连接数
     max-connections-per-route: 50
+
+resilience4j:
+  ratelimiter:
+    instances:
+      buyById:
+        # 刷新周期内请求的最大频次
+        limitForPeriod: 1
+        # 刷新周期，也即 1s 内最大只允许 1 次请求通过
+        limitRefreshPeriod: 1s
+        # 线程等待许可的时间，也即第二个线程不等待，直接抛异常
+        timeoutDuration: 0
