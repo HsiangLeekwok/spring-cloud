@@ -63,34 +63,3 @@ feign:
     max-connections: 200
     # feign 单个路径的最大连接数
     max-connections-per-route: 50
-
-resilience4j:
-  ratelimiter:
-    configs:
-      # 默认配置，自定义属性没有配置则用系统中预定义的配置，而不是用这里的 default 配置，如 timeoutDuration
-      default:
-        # 刷新周期内请求的最大频次
-        limitForPeriod: 1
-        # 刷新周期，也即 1s 内最大只允许 1 次请求通过
-        limitRefreshPeriod: 1s
-        # 线程等待许可的时间，也即第二个线程不等待，直接抛异常
-        timeoutDuration: 0
-      share:
-        limitForPeriod: 2
-    instances:
-      buyById:
-        # 刷新周期内请求的最大频次，引用 share 的配置项
-        baseConfig: share
-        # 刷新周期，也即 1s 内最大只允许 1 次请求通过
-        limitRefreshPeriod: 1s
-
-  # 舱壁模式
-  bulkhead:
-    instances:
-      buyById:
-        # 最大并发请求数
-        maxConcurrentCalls: 1
-        # 舱壁饱和时的最大等待时间，默认 0ms
-        maxWaitDuration: 10ms
-        # 事件缓冲区大小
-        eventConsumerBufferSize: 1

@@ -1,0 +1,17 @@
+# Spring cloud 采用的约定大于配置的方式
+spring:
+  application:
+    name: ms-class
+
+  cloud:
+    consul:
+      # 指定 consul 的主机名或 ip
+      host: localhost
+      # 指定 consul 的端口
+      port: 8500
+      config:
+        # 配置格式为 yaml
+        format: yaml
+  profiles:
+    # 优先级 ms-user,dev -> ms-user -> application,dev -> application
+    active: dev
