@@ -6,7 +6,7 @@ spring:
   cloud:
     consul:
       # 指定 consul 的主机名或 ip
-      host: localhost
+      host: 192.168.28.128
       # 指定 consul 的端口
       port: 8500
       config:

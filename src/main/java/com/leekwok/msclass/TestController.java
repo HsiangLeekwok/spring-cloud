@@ -6,6 +6,8 @@ import io.vavr.collection.Seq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.stream.messaging.Source;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,5 +38,13 @@ public class TestController {
     @GetMapping("/rate-limiter-configs")
     public Seq<RateLimiter> test() {
         return this.rateLimiterRegistry.getAllRateLimiters();
+    }
+
+    @Autowired
+    private Source source;
+
+    @GetMapping("/test-stream")
+    public boolean testStream() {
+        return this.source.output().send(MessageBuilder.withPayload("Message body.").build());
     }
 }

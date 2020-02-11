@@ -1,8 +1,11 @@
 server:
   port: 8010
 spring:
+  rabbitmq:
+    host: 192.168.28.128
+    port: 5672
   datasource:
-    url: jdbc:mysql://localhost:3306/ms_class
+    url: jdbc:mysql://192.168.28.128:3306/ms_class
     hikari:
       username: root
       password: root1234%
@@ -18,6 +21,10 @@ spring:
     name: ms-class
 
   cloud:
+    stream:
+      bindings:
+        output:
+          destination: stream-test
     consul:
       host: localhost
       port: 8500
