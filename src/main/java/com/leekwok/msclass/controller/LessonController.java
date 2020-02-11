@@ -2,6 +2,7 @@ package com.leekwok.msclass.controller;
 
 import com.leekwok.msclass.entity.Lesson;
 import com.leekwok.msclass.service.LessonService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,8 @@ public class LessonController {
      */
     @GetMapping("/buy/{id}")
     // 限流放到方法上
-    @RateLimiter(name = "buyById", fallbackMethod = "buyByIdFallback")
+//    @RateLimiter(name = "buyById", fallbackMethod = "buyByIdFallback")
+    @CircuitBreaker(name = "buyById", fallbackMethod = "buyByIdFallback")
     public Lesson buyById(@PathVariable Integer id) {
         // 1、根据 id 查询指定的 lesson
         // 2、根据 lesson.id 查询 user_lesson，如果没有
