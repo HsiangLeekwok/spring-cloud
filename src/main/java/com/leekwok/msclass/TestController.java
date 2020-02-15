@@ -44,9 +44,24 @@ public class TestController {
     @Autowired
     private Source source;
 
-    @GetMapping("/test-stream")
-    public boolean testStream() {
-        return this.source.output().send(MessageBuilder.withPayload("Message body.").build());
+    @GetMapping("/test-stream-v1")
+    public boolean testStreamV1() {
+        return this.source.output()
+                .send(MessageBuilder
+                        .withPayload("Message body of V1.")
+                        .setHeader("version","v1")
+                        .build()
+                );
+    }
+
+    @GetMapping("/test-stream-v2")
+    public boolean testStreamV2() {
+        return this.source.output()
+                .send(MessageBuilder
+                        .withPayload("Message body of V2.")
+                        .setHeader("version","v2")
+                        .build()
+                );
     }
 
     @Autowired
