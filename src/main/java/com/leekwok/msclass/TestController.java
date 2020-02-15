@@ -1,5 +1,6 @@
 package com.leekwok.msclass;
 
+import com.leekwok.msclass.rabbit.MySource;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import io.vavr.collection.Seq;
@@ -46,5 +47,12 @@ public class TestController {
     @GetMapping("/test-stream")
     public boolean testStream() {
         return this.source.output().send(MessageBuilder.withPayload("Message body.").build());
+    }
+
+    @Autowired
+    private MySource mySource;
+    @GetMapping("/test-my-source")
+    public boolean testStream2() {
+        return this.mySource.output().send(MessageBuilder.withPayload("Message body(custom body).").build());
     }
 }
