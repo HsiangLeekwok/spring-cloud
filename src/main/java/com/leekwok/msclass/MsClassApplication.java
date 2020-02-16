@@ -1,6 +1,5 @@
 package com.leekwok.msclass;
 
-import com.leekwok.msclass.rabbit.MySource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -12,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 @EnableFeignClients//(defaultConfiguration = GlobalFeignCliengConfiguration.class)
 @SpringBootApplication
-@EnableBinding({Source.class, MySource.class})
+@EnableBinding({Source.class/*, MySource.class*/})
 public class MsClassApplication {
 
     public static void main(String[] args) {

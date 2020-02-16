@@ -13,14 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
  * <b>Subject</b>: <br/>
  * <b>Description</b>:
  */
-@FeignClient(name = "ms-user"/*, configuration = MsUserFeignCliengConfiguration.class*/)
+@FeignClient(name = "ms-user"/*, configuration = MsUserFeignClientConfiguration.class*/)
 public interface MsUserFeignClient {
 
-    @RateLimiter(name = "findUserById", fallbackMethod = "fallbackX")
+    @RateLimiter(name = "findUserById")
     @GetMapping("/users/{userId}")
     UserDTO findUserById(@PathVariable("userId") Integer userId);
-
-    default UserDTO findUserById(Integer userId, Throwable throwable) {
-        return new UserDTO();
-    }
 }

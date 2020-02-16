@@ -1,14 +1,11 @@
 package com.leekwok.msclass;
 
-import com.leekwok.msclass.rabbit.MySource;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import io.vavr.collection.Seq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.stream.messaging.Source;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,35 +36,5 @@ public class TestController {
     @GetMapping("/rate-limiter-configs")
     public Seq<RateLimiter> test() {
         return this.rateLimiterRegistry.getAllRateLimiters();
-    }
-
-    @Autowired
-    private Source source;
-
-    @GetMapping("/test-stream-v1")
-    public boolean testStreamV1() {
-        return this.source.output()
-                .send(MessageBuilder
-                        .withPayload("Message body of V1.")
-                        .setHeader("version","v1")
-                        .build()
-                );
-    }
-
-    @GetMapping("/test-stream-v2")
-    public boolean testStreamV2() {
-        return this.source.output()
-                .send(MessageBuilder
-                        .withPayload("Message body of V2.")
-                        .setHeader("version","v2")
-                        .build()
-                );
-    }
-
-    @Autowired
-    private MySource mySource;
-    @GetMapping("/test-my-source")
-    public boolean testStream2() {
-        return this.mySource.output().send(MessageBuilder.withPayload("Message body(custom body).").build());
     }
 }

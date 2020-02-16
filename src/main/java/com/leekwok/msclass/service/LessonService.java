@@ -1,6 +1,7 @@
 package com.leekwok.msclass.service;
 
 import com.leekwok.msclass.dto.UserDTO;
+import com.leekwok.msclass.dto.UserMoneyDTO;
 import com.leekwok.msclass.entity.Lesson;
 import com.leekwok.msclass.entity.LessonUser;
 import com.leekwok.msclass.feign.MsUserFeignClient;
@@ -11,7 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.stream.messaging.Source;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -29,8 +33,11 @@ import java.util.stream.Collectors;
  * <b>Description</b>:
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class LessonService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(LessonService.class);
+
     @Autowired
     private DiscoveryClient discoveryClient;
 
@@ -45,6 +52,9 @@ public class LessonService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private Source source;
 
     /**
      * 根据 id 查找用户信息
@@ -61,25 +71,6 @@ public class LessonService {
         // 3、如果 user_lesson == null && 用户余额 > lesson.money
         // TODO 登录实现后需重构
         Integer userId = 1;
-//        List<ServiceInstance> instances = this.discoveryClient.getInstances("ms-user");
-//
-////        List<ServiceInstance> jifang = instances.stream().filter(instance -> {
-////            Map<String, String> metadata = instance.getMetadata();
-////            String JF = metadata.get("JIFANG");
-////            if ("NJ".equals(JF)) {
-////                return true;
-////            }
-////            return false;
-////        }).collect(Collectors.toList());
-//        // 随机算法进行远程服务选择
-//        int i = ThreadLocalRandom.current().nextInt(instances.size());
-//        URI uri = instances.get(i).getUri();
-//        LOGGER.info("selected address = {}", uri);
-//        UserDTO userDto = restTemplate.getForObject(
-//                "http://ms-user/users/{userId}",
-//                UserDTO.class,
-//                userId
-//        );
         // 用 Feign 重构
         UserDTO userDto = msUserFeignClient.findUserById(userId);
         assert userDto != null;
@@ -88,8 +79,22 @@ public class LessonService {
             throw new IllegalArgumentException("Not enough money to buy lesson.");
         }
         // 购买逻辑
-        // 1. 调用用户微服务的扣减金额接口
+        // 1. 发送消息给用户微服务，让它扣减金额
+        this.source.output().send(
+                MessageBuilder.withPayload(
+                        new UserMoneyDTO(
+                                userId,
+                                lesson.getPrice(),
+                                "购买课程",
+                                String.format("%d 购买了 id 为 %d 的课程", userId, id)
+                        )
+                ).build()
+        );
         // 2. 向 lesson_user 表插入数据
+        LessonUser lessonUser1 = new LessonUser();
+        lessonUser1.setLessonId(id);
+        lessonUser1.setUserId(userId);
+        this.lessonUserRepository.save(lessonUser1);
         return lesson;
     }
 }

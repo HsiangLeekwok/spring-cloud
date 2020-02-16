@@ -5,7 +5,7 @@ spring:
     host: 192.168.28.128
     port: 5672
   datasource:
-    url: jdbc:mysql://192.168.28.128:3306/ms_class
+    url: jdbc:mysql://192.168.28.128:3306/ms_class?characterEncoding=utf-8
     hikari:
       username: root
       password: root1234%
@@ -24,9 +24,9 @@ spring:
     stream:
       bindings:
         output:
-          destination: stream-test
-        myOutput:
-          destination: stream-test2
+          destination: lesson-buy
+#        myOutput:
+#          destination: stream-test2
     consul:
       host: localhost
       port: 8500
