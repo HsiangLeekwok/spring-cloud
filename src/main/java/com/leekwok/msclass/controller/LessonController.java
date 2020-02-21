@@ -37,11 +37,16 @@ public class LessonController {
 
     /**
      * 购买指定 id 的课程
+     * 注意：
+     * 基于线程池的 bulkhead 无法传递 ThreadLocal
+     * 如果应用使用了 ThreadLocal，不要使用基于线程池的 Bulkhead 限流
      */
     @Login
     @GetMapping("/buy/{id}")
     // 限流放到方法上
     @RateLimiter(name = "buyById", fallbackMethod = "buyByIdFallback")
+    //@Bulkhead(name = "buyById",fallbackMethod = "buyByIdFallback",type = Bulkhead.Type.THREADPOOL)
+    // 基于线程池的 Bulkhead 会报 ThreadPool bulkhead is only applicable for completable futures 异常
     public Lesson buyById(@PathVariable Integer id, HttpServletRequest request) throws InterruptedException {
 //        Thread.sleep(1000);
         // 1、根据 id 查询指定的 lesson

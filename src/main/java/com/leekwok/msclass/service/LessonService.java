@@ -10,7 +10,6 @@ import com.leekwok.msclass.repository.LessonUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.messaging.support.MessageBuilder;
@@ -20,11 +19,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 /**
  * <b>Author</b>: Xiang Liguo<br/>
@@ -73,7 +67,7 @@ public class LessonService {
         // TODO 登录实现后需重构
         Integer userId = (Integer) request.getAttribute("userId");
         // 用 Feign 重构
-        UserDTO userDto = msUserFeignClient.findUserById(userId,request.getHeader("Authorization"));
+        UserDTO userDto = msUserFeignClient.findUserById(userId);
         assert userDto != null;
         BigDecimal money = userDto.getMoney().subtract(lesson.getPrice());
         if (money.doubleValue() < 0) {

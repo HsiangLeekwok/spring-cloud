@@ -19,6 +19,5 @@ public interface MsUserFeignClient {
 
     @RateLimiter(name = "findUserById")
     @GetMapping("/users/{userId}")
-    UserDTO findUserById(@PathVariable("userId") Integer userId,
-                         @RequestHeader("Authorization") String token);
+    UserDTO findUserById(@PathVariable("userId") Integer userId);
 }
