@@ -37,10 +37,11 @@ public class JwtOperator {
      */
     public Claims getClaimsFromToken(String token) {
         try {
-            return Jwts.parser()
-                .setSigningKey(this.secret.getBytes())
-                .parseClaimsJws(token)
-                .getBody();
+            return Jwts.parserBuilder()
+                    .setSigningKey(this.secret.getBytes())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
         } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException e) {
             log.error("token解析错误", e);
             throw new IllegalArgumentException("Token invalided.");
@@ -55,7 +56,7 @@ public class JwtOperator {
      */
     public Date getExpirationDateFromToken(String token) {
         return getClaimsFromToken(token)
-            .getExpiration();
+                .getExpiration();
     }
 
     /**
@@ -93,13 +94,13 @@ public class JwtOperator {
         SecretKey key = Keys.hmacShaKeyFor(keyBytes);
 
         return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(createdTime)
-            .setExpiration(expirationTime)
-            // 你也可以改用你喜欢的算法
-            // 支持的算法详见：https://github.com/jwtk/jjwt#features
-            .signWith(key, SignatureAlgorithm.HS256)
-            .compact();
+                .setClaims(claims)
+                .setIssuedAt(createdTime)
+                .setExpiration(expirationTime)
+                // 你也可以改用你喜欢的算法
+                // 支持的算法详见：https://github.com/jwtk/jjwt#features
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     /**

@@ -5,6 +5,7 @@ import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 /**
  * <b>Author</b>: Hsiang Leekwok<br/>
@@ -18,5 +19,6 @@ public interface MsUserFeignClient {
 
     @RateLimiter(name = "findUserById")
     @GetMapping("/users/{userId}")
-    UserDTO findUserById(@PathVariable("userId") Integer userId);
+    UserDTO findUserById(@PathVariable("userId") Integer userId,
+                         @RequestHeader("Authorization") String token);
 }

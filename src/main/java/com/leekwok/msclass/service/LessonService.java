@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
@@ -59,7 +60,7 @@ public class LessonService {
     /**
      * 根据 id 查找用户信息
      */
-    public Lesson buyById(Integer id) {
+    public Lesson buyById(Integer id, HttpServletRequest request) {
         // 1、根据 id 查询指定的 lesson
         Lesson lesson = this.lessonRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Class is not exists."));
@@ -70,9 +71,9 @@ public class LessonService {
         }
         // 3、如果 user_lesson == null && 用户余额 > lesson.money
         // TODO 登录实现后需重构
-        Integer userId = 1;
+        Integer userId = (Integer) request.getAttribute("userId");
         // 用 Feign 重构
-        UserDTO userDto = msUserFeignClient.findUserById(userId);
+        UserDTO userDto = msUserFeignClient.findUserById(userId,request.getHeader("Authorization"));
         assert userDto != null;
         BigDecimal money = userDto.getMoney().subtract(lesson.getPrice());
         if (money.doubleValue() < 0) {
