@@ -1,5 +1,6 @@
 package com.leekwok.msclass;
 
+import com.leekwok.msclass.auth.CheckAuthz;
 import com.leekwok.msclass.dto.UserDTO;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
@@ -61,10 +62,24 @@ public class TestController {
         );
     }
 
-
     @GetMapping("/test-token-relay2")
     public UserDTO testTokenRelay2(@RequestHeader("Authorization") String token) {
       return   this.restTemplate.getForObject(
+                "http://ms-user/users/{id}",
+                UserDTO.class,
+                1
+        );
+    }
+
+    /**
+     * 当且仅当用户是 vip 的时候才能访问
+     * @param token
+     * @return
+     */
+    @GetMapping("/vip")
+    @CheckAuthz(hasRole = "vip")
+    public UserDTO vip(@RequestHeader("Authorization") String token) {
+        return   this.restTemplate.getForObject(
                 "http://ms-user/users/{id}",
                 UserDTO.class,
                 1
