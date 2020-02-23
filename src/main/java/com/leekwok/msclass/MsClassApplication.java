@@ -1,5 +1,6 @@
 package com.leekwok.msclass;
 
+import com.leekwok.msclass.resttemplate.TokenRelayRequestInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -8,6 +9,8 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Collections;
 
 @EnableFeignClients//(defaultConfiguration = GlobalFeignCliengConfiguration.class)
 @SpringBootApplication
@@ -24,6 +27,10 @@ public class MsClassApplication {
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
-        return new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setInterceptors(
+                Collections.singletonList(new TokenRelayRequestInterceptor())
+        );
+        return restTemplate;
     }
 }

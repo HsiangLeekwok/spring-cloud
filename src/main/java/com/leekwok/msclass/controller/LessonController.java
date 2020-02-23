@@ -37,7 +37,7 @@ public class LessonController {
 
     /**
      * 购买指定 id 的课程
-     * 注意：
+     * 注意：RequestInterceptor 的坑
      * 基于线程池的 bulkhead 无法传递 ThreadLocal
      * 如果应用使用了 ThreadLocal，不要使用基于线程池的 Bulkhead 限流
      */
